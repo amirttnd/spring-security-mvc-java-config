@@ -31,4 +31,11 @@ public class HomeController {
     }
 
 
+    @RequestMapping(value = "/myLogin")
+    public String myLogin() {
+        return "myLogin";
+    }
+
+
+
 }
