@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
@@ -18,12 +19,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     LogoutSuccessHandler logoutSuccessHandler;
 
     @Autowired
+    UserDetailsService userDetailsService;
+
+    @Autowired
     public void configGlobal(AuthenticationManagerBuilder managerBuilder) throws Exception {
         managerBuilder
-                .inMemoryAuthentication()
-                .withUser("user").password("pass").roles("USER")
-                .and()
-                .withUser("admin").password("pass").roles("ADMIN");
+                .userDetailsService(userDetailsService);
     }
 
     @Override
@@ -38,7 +39,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/myLogin").permitAll()
-//                .defaultSuccessUrl("/")
                 .successHandler(loginSuccessHandler)
                 .loginProcessingUrl("/loginProcessing")
                 .and()
